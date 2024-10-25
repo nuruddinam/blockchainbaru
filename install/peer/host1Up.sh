@@ -1,0 +1,1 @@
+docker-compose -f hostLnsw.1 up -d

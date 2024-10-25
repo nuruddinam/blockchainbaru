@@ -1,0 +1,35 @@
+# Orderer Definition
+# Note: if using raft consensus, define n+1 orderers.
+#       if using solo consensus, just define 1 orderer (orderer.example.com)
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    Specs:
+      - Hostname: orderer
+      - Hostname: orderer1 # peer0.org1Name
+      - Hostname: orderer2 # peer1.org1Name
+      - Hostname: orderer3 # peer0.org2Name
+
+# Peer Definition
+# Note: Peer name orderer starts from 0. peer0, peer1, etc.
+PeerOrgs:
+  - Name: org1Name
+    Domain: org1Name.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2 # How many peer will be generated
+    Users:
+      Count: 1 # The number of user accounts _in addition_ to Admin
+    Specs:
+      - Hostname: peer0
+      - Hostname: peer1
+
+  - Name: org2Name
+    Domain: org2Name.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+    Specs:
+      - Hostname: peer0
