@@ -41,46 +41,46 @@ Organizations:
         Rule: "OR('OrdererMSP.member')"
 
   - &org1Name
-    Name: org1NameMSP
-    ID: org1NameMSP
-    MSPDir: crypto-config/peerOrganizations/org1Name.example.com/msp
+    Name: ${ORG1_MSPNAME}
+    ID: ${ORG1_MSPNAME}
+    MSPDir: crypto-config/peerOrganizations/${ORG1_DOMAIN}/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('org1NameMSP.member')"
+        Rule: "OR('${ORG1_MSPNAME}.member')"
       Writers:
         Type: Signature
-        Rule: "OR('org1NameMSP.admin', 'org1NameMSP.client')"
+        Rule: "OR('${ORG1_MSPNAME}.admin', '${ORG1_MSPNAME}.client')"
       Admins:
         Type: Signature
-        Rule: "OR('org1NameMSP.admin')"
+        Rule: "OR('${ORG1_MSPNAME}.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('org1NameMSP.peer')"
+        Rule: "OR('${ORG1_MSPNAME}.peer')"
     AnchorPeers:
-      - Host: peer0.org1Name.example.com # define dns / ip address if using multihost technique
-        Port: 7051 # define port
+      - Host: ${PEER0_ORG1_DOMAIN} # define dns / ip address if using multihost technique
+        Port: ${PEER0_ORG1_PORT} # define port
 
   - &org2Name
-    Name: org2NameMSP
-    ID: org2NameMSP
-    MSPDir: crypto-config/peerOrganizations/org2Name.example.com/msp
+    Name: ${ORG2_MSPNAME}
+    ID: ${ORG2_MSPNAME}
+    MSPDir: crypto-config/peerOrganizations/${ORG2_DOMAIN}/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('org2NameMSP.member')"
+        Rule: "OR('${ORG2_MSPNAME}.member')"
       Writers:
         Type: Signature
-        Rule: "OR('org2NameMSP.admin', 'org2NameMSP.client')"
+        Rule: "OR('$ORG2_MSPNAME.admin', '$ORG2_MSPNAME.client')"
       Admins:
         Type: Signature
-        Rule: "OR('org2NameMSP.admin')"
+        Rule: "OR('${ORG2_MSPNAME}.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('org2NameMSP.peer')"
+        Rule: "OR('${ORG2_MSPNAME}.peer')"
     AnchorPeers:
-      - Host: peer0.org2Name.example.com
-        Port: 9051
+      - Host: ${PEER0_ORG2_DOMAIN}
+        Port: ${PEER0_ORG2_PORT}
 
 Application: &ApplicationDefaults
   Organizations:
@@ -103,7 +103,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   OrdererType: etcdraft # define consensus type, either solo or etcdraft
   Addresses:
-    - orderer.example.com:7050
+    - orderer.example.com:${ORDERER_ORG_PORT}
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 10
@@ -128,21 +128,21 @@ Orderer: &OrdererDefaults
   EtcdRaft: # if using solo consensus, remove this field
     Consenters:
       - Host: orderer.example.com
-        Port: 7050
+        Port: ${ORDERER_ORG_PORT}
         ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
         ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-      - Host: orderer1.org1Name.example.com
-        Port: 10050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.org1Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.org1Name.example.com/tls/server.crt
-      - Host: orderer2.org1Name.example.com
-        Port: 8050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.org1Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.org1Name.example.com/tls/server.crt
-      - Host: orderer3.org2Name.example.com
-        Port: 9050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.org2Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.org2Name.example.com/tls/server.crt
+      - Host: ${ORDERER1_ORG1_DOMAIN}
+        Port: ${ORDERER1_ORG1_PORT}
+        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/tls/server.crt
+        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/tls/server.crt
+      - Host: ${ORDERER2_ORG1_DOMAIN}
+        Port: ${ORDERER2_ORG1_PORT}
+        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG1_DOMAIN}/tls/server.crt
+        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG1_DOMAIN}/tls/server.crt
+      - Host: ${ORDERER3_ORG2_DOMAIN}
+        Port: ${ORDERER3_ORG2_PORT}
+        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER3_ORG2_DOMAIN}/tls/server.crt
+        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER3_ORG2_DOMAIN}/tls/server.crt
 
 Profiles:
   OrdererGenesis:
@@ -159,7 +159,7 @@ Profiles:
 
   ChannelProfile:
     <<: *ChannelDefaults
-    Consortium: SampleConsortium # Rename Consortium name based on needs.
+    Consortium: ${CONSORTIUM_NAME} # Rename Consortium name based on needs.
     Application:
       <<: *ApplicationDefaults
       Organizations:

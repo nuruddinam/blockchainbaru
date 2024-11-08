@@ -8,25 +8,25 @@ OrdererOrgs:
       - Hostname: orderer
         SANS:
           - orderer.example.com
-          - localhost
-      - Hostname: orderer1.org1Name
+          - ${PEER0_ORG1_HOST_IPADDRESS}
+      - Hostname: ${ORDERER1_ORG1_NAME}
         SANS:
-          - orderer1.org1Name.example.com
-          - localhost
-      - Hostname: orderer2.org1Name
+          - ${ORDERER1_ORG1_DOMAIN}
+          - ${PEER0_ORG1_HOST_IPADDRESS}
+      - Hostname: ${ORDERER2_ORG1_NAME}
         SANS:
-          - orderer2.org1Name.example.com
-          - localhost
-      - Hostname: orderer3.org2Name
+          - ${ORDERER2_ORG1_DOMAIN}
+          - ${PEER1_ORG1_HOST_IPADDRESS}
+      - Hostname: ${ORDERER3_ORG2_NAME}
         SANS:
-          - orderer3.org2Name.example.com
-          - localhost
+          - ${ORDERER3_ORG2_DOMAIN}
+          - ${PEER0_ORG2_HOST_IPADDRESS}
 
 # Peer Definition
 # Note: Peer name orderer starts from 0. peer0, peer1, etc.
 PeerOrgs:
-  - Name: org1Name
-    Domain: org1Name.example.com
+  - Name: ${ORG1_NAME}
+    Domain: ${ORG1_DOMAIN}
     EnableNodeOUs: true
     Template:
       Count: 2 # How many peer will be generated
@@ -35,15 +35,15 @@ PeerOrgs:
     Specs:
       - Hostname: peer0
         SANS:
-          - peer0.org1Name.example.com
-          - localhost
+          - ${PEER0_ORG1_DOMAIN}
+          - ${PEER0_ORG1_HOST_IPADDRESS}
       - Hostname: peer1
         SANS:
-          - peer1.org1Name.example.com
-          - localhost
+          - ${PEER1_ORG1_DOMAIN}
+          - ${PEER1_ORG1_HOST_IPADDRESS}
 
-  - Name: org2Name
-    Domain: org2Name.example.com
+  - Name: ${ORG2_NAME}
+    Domain: ${ORG2_DOMAIN}
     EnableNodeOUs: true
     Template:
       Count: 1
@@ -52,5 +52,5 @@ PeerOrgs:
     Specs:
       - Hostname: peer0
         SANS:
-          - peer0.org2Name.example.com
-          - localhost
+          - ${PEER0_ORG2_DOMAIN}
+          - ${PEER0_ORG2_HOST_IPADDRESS}

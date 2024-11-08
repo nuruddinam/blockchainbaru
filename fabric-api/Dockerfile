@@ -1,5 +1,5 @@
 # Use an official Node.js image as the base
-FROM node:18
+FROM node:latest
 
 # Set the working directory in the container
 WORKDIR /app
@@ -28,7 +28,6 @@ RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
 # Copy the rest of the application code
 COPY . .
 
-RUN npm run build
 # Expose the port the app runs on
-EXPOSE 3000
-CMD [ "npm", "run", "start" ]
+EXPOSE 5000
+CMD [ "npm", "start" ]

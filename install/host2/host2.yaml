@@ -1,0 +1,114 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: "2"
+
+networks:
+  fabric-network:
+    external: true
+
+volumes:
+  orderer2.org1Name.example.com:
+  peer1.org1Name.example.com:
+  ca-org1Name:
+  fabric-api:
+  pgdata:
+  walletstore:
+
+services:
+  orderer2.org1Name.example.com:
+    extends:
+      file: ../../base/peer-base.yaml
+      service: orderer-base
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=${ORDERER2_ORG1_PORT}
+    container_name: ${ORDERER2_ORG1_DOMAIN}
+    volumes:
+      - ../../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG1_DOMAIN}/msp:/var/hyperledger/orderer/msp
+      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG1_DOMAIN}/tls/:/var/hyperledger/orderer/tls
+      - ${ORDERER2_ORG1_DOMAIN}:/var/hyperledger/production/orderer
+    ports:
+      - ${ORDERER2_ORG1_PORT}:${ORDERER2_ORG1_PORT}
+    networks:
+      - ${NETWORK_NAME}
+
+  peer1.org1Name.example.com:
+    container_name: ${PEER1_ORG1_DOMAIN}
+    extends:
+      file: ../../base/docker-compose-base.yaml
+      service: ${PEER1_ORG1_DOMAIN}
+    networks:
+      - ${NETWORK_NAME}
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:${IMAGE_TAG}
+    tty: true
+    stdin_open: true
+    environment:
+      - SYS_CHANNEL=${SYS_CHANNEL}
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=${PEER1_ORG1_CORE_ADDRESS}
+      - CORE_PEER_LOCALMSPID=${ORG1_MSPNAME}
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${ORG1_DOMAIN}/users/Admin@${ORG1_NAME}/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./../chaincode/:/opt/gopath/src/github.com/chaincode
+      - ../../crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+      - ../../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+      - ../../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - ${ORDERER2_ORG1_DOMAIN}
+      - ${PEER1_ORG1_DOMAIN}
+    networks:
+      - ${NETWORK_NAME}
+
+  ca-org1Name:
+    image: hyperledger/fabric-ca:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-${ORG1_NAME}
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=${HOST2_CAPORT}
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:${HOST2_CAPORT_LISTENADDRESS}
+    ports:
+      - ${HOST2_CAPORT}:${HOST2_CAPORT}
+      - ${HOST2_CAPORT_LISTENADDRESS}:${HOST2_CAPORT_LISTENADDRESS}
+    command: sh -c 'fabric-ca-server start -b ${HOST2_CA_ADMIN_NAME}:${HOST2_CA_ADMIN_PASSWORD} -d'
+    volumes:
+      - ../../fabric-ca/${ORG1_NAME}:/etc/hyperledger/fabric-ca-server
+    container_name: ca-${ORG1_NAME}
+    networks:
+      - ${NETWORK_NAME}
+
+  fabric-api:
+    build: ../../fabric-api
+    container_name: fabric_api
+    command: sh -c "npm start"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../../${CCPPATH_ORG1}:/${CCPPATH_ORG1}
+    ports:
+      - ${API_PORT}:${API_PORT}
+    env_file:
+      - ../../.env
+    depends_on:
+      - ca-${ORG1_NAME}
+      - cli
+    networks:
+      - ${NETWORK_NAME}

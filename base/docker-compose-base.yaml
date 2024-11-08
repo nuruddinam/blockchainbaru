@@ -21,70 +21,70 @@ services:
       - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
       - orderer.example.com:/var/hyperledger/production/orderer
     ports:
-      - 7050:7050
+      - ${ORDERER_ORG_PORT}:${ORDERER_ORG_PORT}
 
   peer0.org1Name.example.com:
-    container_name: peer0.org1Name.example.com
+    container_name: ${PEER0_ORG1_DOMAIN}
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.org1Name.example.com
-      - CORE_PEER_ADDRESS=10.239.54.32:7051 # define ip address
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.org1Name.example.com:7052 # define dns
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=10.239.54.36:8051 10.239.54.38:9051 # define others ip address
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=10.239.54.32:7051 # define ip address
-      - CORE_PEER_LOCALMSPID=Org1NameMSP # define msp name
+      - CORE_PEER_ID=${PEER0_ORG1_DOMAIN}
+      - CORE_PEER_ADDRESS=${PEER0_ORG1_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER0_ORG1_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=${PEER0_ORG1_CHAINCODE_ADDRESS} # define dns
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER0_ORG1_CHAINCODE_PORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER1_ORG1_CORE_ADDRESS} ${PEER0_ORG2_CORE_ADDRESS} # define others ip address
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER0_ORG1_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LOCALMSPID=${ORG1_MSPNAME} # define msp name
     volumes:
       - /var/run/:/host/var/run/
-      - ../crypto-config/peerOrganizations/org1Name.example.com/peers/peer0.org1Name.example.com/msp:/etc/hyperledger/fabric/msp
-      - ../crypto-config/peerOrganizations/org1Name.example.com/peers/peer0.org1Name.example.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.org1Name.example.com:/var/hyperledger/production
+      - ../crypto-config/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER0_ORG1_DOMAIN}/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER0_ORG1_DOMAIN}/tls:/etc/hyperledger/fabric/tls
+      - ${PEER0_ORG1_DOMAIN}:/var/hyperledger/production
     ports:
-      - 7051:7051
+      - ${PEER0_ORG1_PORT}:${PEER0_ORG1_PORT}
 
   peer1.org1Name.example.com:
-    container_name: peer1.org1Name.example.com
+    container_name: ${PEER1_ORG1_DOMAIN}
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.org1Name.example.com
-      - CORE_PEER_ADDRESS=10.239.54.36:8051 # define ip address
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
-      - CORE_PEER_CHAINCODEADDRESS=peer1.org1Name.example.com:8052 # define dns
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=10.239.54.32:7051 10.239.54.38:9051 # define others ip address
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=10.239.54.36:8051 # define ip address
-      - CORE_PEER_LOCALMSPID=Org1NameMSP # define msp name
+      - CORE_PEER_ID=${PEER1_ORG1_DOMAIN}
+      - CORE_PEER_ADDRESS=${PEER1_ORG1_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER1_ORG1_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=${PEER1_ORG1_CHAINCODE_ADDRESS} # define dns
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER1_ORG1_CHAINCODE_PORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG1_CORE_ADDRESS} ${PEER0_ORG2_CORE_ADDRESS} # define others ip address
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER1_ORG1_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LOCALMSPID=${ORG1_MSPNAME} # define msp name
     volumes:
       - /var/run/:/host/var/run/
-      - ../crypto-config/peerOrganizations/org1Name.example.com/peers/peer1.org1Name.example.com/msp:/etc/hyperledger/fabric/msp
-      - ../crypto-config/peerOrganizations/org1Name.example.com/peers/peer1.org1Name.example.com/tls:/etc/hyperledger/fabric/tls
-      - peer1.org1.lnsw.com:/var/hyperledger/production
+      - ../crypto-config/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/peerOrganizations/${ORG2_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/tls:/etc/hyperledger/fabric/tls
+      - ${PEER1_ORG1_DOMAIN}:/var/hyperledger/production
     ports:
-      - 8051:8051
+      - ${PEER1_ORG1_PORT}:${PEER1_ORG1_PORT}
 
   peer0.org2Name.example.com:
-    container_name: peer0.org2Name.example.com
+    container_name: ${PEER0_ORG2_DOMAIN}
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.org2Name.example.com
-      - CORE_PEER_ADDRESS=10.239.54.38:9051 # define ip address
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.org2Name.example.com:9052 # define dns
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=10.239.54.32:7051 10.239.54.36:8051 # define others ip address
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=10.239.54.38:9051 # define ip address
-      - CORE_PEER_LOCALMSPID=Org2NameMSP # define msp name
+      - CORE_PEER_ID=${PEER0_ORG2_DOMAIN}
+      - CORE_PEER_ADDRESS=${PEER0_ORG2_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER0_ORG2_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=${PEER0_ORG2_CHAINCODE_ADDRESS} # define dns
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER0_ORG2_CHAINCODE_PORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG1_CORE_ADDRESS} ${PEER1_ORG1_CORE_ADDRESS} # define others ip address
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER0_ORG2_CORE_ADDRESS} # define ip address
+      - CORE_PEER_LOCALMSPID=${ORG2_MSPNAME} # define msp name
     volumes:
       - /var/run/:/host/var/run/
-      - ../crypto-config/peerOrganizations/org2Name.example.com/peers/peer0.org2Name.example.com/msp:/etc/hyperledger/fabric/msp
-      - ../crypto-config/peerOrganizations/org2Name.example.com/peers/peer0.org2Name.example.com/tls:/etc/hyperledger/fabric/tls
-      - peer0.org2Name.example.com:/var/hyperledger/production
+      - ../crypto-config/peerOrganizations/${ORG2_DOMAIN}/peers/${PEER0_ORG2_DOMAIN}/msp:/etc/hyperledger/fabric/msp
+      - ../crypto-config/peerOrganizations/${ORG2_DOMAIN}/peers/${PEER0_ORG2_DOMAIN}/tls:/etc/hyperledger/fabric/tls
+      - ${PEER0_ORG2_DOMAIN}:/var/hyperledger/production
     ports:
-      - 9051:9051
+      - ${PEER0_ORG2_PORT}:${PEER0_ORG2_PORT}
