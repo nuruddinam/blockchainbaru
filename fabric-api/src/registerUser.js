@@ -9,12 +9,11 @@
 import { Wallets } from "fabric-network";
 import FabricCAServices from "fabric-ca-client";
 import path from "path";
-import { buildCAClient, enrollAdmin, registerUser } from "./util/CAUtil.js";
+import { buildCAClient, registerUser } from "./util/CAUtil.js";
 import {
   buildCCPOrg1,
   buildCCPOrg2,
   buildWallet,
-  checkTokenExpired,
   updateFileToken,
 } from "./util/AppUtil.js";
 import { fileURLToPath } from "url";

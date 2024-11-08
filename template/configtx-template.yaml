@@ -103,7 +103,7 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   OrdererType: etcdraft # define consensus type, either solo or etcdraft
   Addresses:
-    - orderer.example.com:${ORDERER_ORG_PORT}
+    - orderer.example.com:${ORDERER_MAIN_PORT}
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 10
@@ -128,7 +128,7 @@ Orderer: &OrdererDefaults
   EtcdRaft: # if using solo consensus, remove this field
     Consenters:
       - Host: orderer.example.com
-        Port: ${ORDERER_ORG_PORT}
+        Port: ${ORDERER_MAIN_PORT}
         ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
         ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
       - Host: ${ORDERER1_ORG1_DOMAIN}

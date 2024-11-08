@@ -7,6 +7,11 @@ import { authenticateToken } from "./util/middleware.js";
 import { checkTokenExpired, getUserTokenData } from "./util/AppUtil.js";
 import { enrollUserOrg1 } from "./enrollUser.js";
 import dotenv from "dotenv";
+import {
+  addTransaction,
+  queryAllTransactions,
+  queryTransaction,
+} from "./transaction.js";
 
 dotenv.config();
 
@@ -101,11 +106,44 @@ app.get("/ca/enroll/user", async (req, res) => {
   });
 });
 
-// Endpoint for smart contract function 1
+// Endpoint for add transaction
+app.post(
+  "/chaincode/invoke/transaction",
+  authenticateToken,
+  async (req, res) => {
+    const data = JSON.stringify(req.body.data);
+    const { stdout, stderr } = await addTransaction(data);
+    if (stderr) {
+      return res.status(400).json({ error: stderr });
+    }
+    return res.status(201).json(JSON.parse(stdout));
+  }
+);
 
-// Endpoint for smart contract function 2
+// Endpoint for get all transactions
+app.get(
+  "/chaincode/query/transaction/all",
+  authenticateToken,
+  async (req, res) => {
+    const { stdout, stderr } = await queryAllTransactions();
+    if (stderr) {
+      return res.status(400).json({ error: stderr });
+    }
+    return res.status(200).json(JSON.parse(stdout));
+  }
+);
 
-// Endpoint for smart contract function ..etc
+// Endpoint for get transaction
+app.get("/chaincode/query/transaction", authenticateToken, async (req, res) => {
+  const keySearch = req.body.key;
+  const { stdout, stderr } = await queryTransaction(keySearch);
+  if (stderr) {
+    return res.status(400).json({ error: stderr });
+  }
+  return res.status(200).json(JSON.parse(stdout));
+});
+
+// Endpoint another smart contract function
 
 // Start the server
 app.listen(API_PORT, () => {
