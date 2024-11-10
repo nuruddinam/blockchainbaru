@@ -21,7 +21,7 @@ const generateInvokeCommand = (method, parsedData) => {
     --peerAddresses ${peer0Org1Address} --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${org1Domain}/peers/${peer0Org1Address}/tls/ca.crt 
     --peerAddresses ${peer1Org1Address} --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${org1Domain}/peers/${peer1Org1Address}/tls/ca.crt 
     --peerAddresses ${peer0Org2Address} --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${org2Domain}/peers/${peer0Org2Address}/tls/ca.crt 
-    -c '{\"Args\": [\"DOContract:${method}\", \"${parsedData}\"]}'`;
+    -c '{\"Args\": [\"KVContract:${method}\", \"${parsedData}\"]}'`;
   return invokeCommand;
 };
 
@@ -32,11 +32,11 @@ export async function addTransaction(data) {
 }
 
 export async function queryAllTransactions() {
-  const command = `docker exec cli peer chaincode query -n ${chaincodeName} -C ${channelName} -c '{"Args": ["DOContract:queryAllOrders", ""]}'`;
+  const command = `docker exec cli peer chaincode query -n ${chaincodeName} -C ${channelName} -c '{"Args": ["KVContract:queryAllOrders", ""]}'`;
   return await execPromisify(command);
 }
 
 export async function queryTransaction(hash) {
-  const command = `docker exec cli peer chaincode query -n ${chaincodeName} -C ${channelName} -c '{"Args": ["DOContract:queryOrder", \"${hash}\"]}'`;
+  const command = `docker exec cli peer chaincode query -n ${chaincodeName} -C ${channelName} -c '{"Args": ["KVContract:queryOrder", \"${hash}\"]}'`;
   return await execPromisify(command);
 }

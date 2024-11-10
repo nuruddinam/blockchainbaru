@@ -143,7 +143,7 @@ app.get("/chaincode/query/transaction", authenticateToken, async (req, res) => {
   return res.status(200).json(JSON.parse(stdout));
 });
 
-// Endpoint another smart contract function
+// Endpoint for another smart contract function
 
 // Start the server
 app.listen(API_PORT, () => {
