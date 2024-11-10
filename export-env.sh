@@ -3,7 +3,7 @@
 if [ -f .env ]; then
   # Read .env line by line
   while IFS= read -r line || [ -n "$line" ]; do
-    # Skip empty lines and comments
+    # Skip empty lines and comment
     [[ $line =~ ^#.*$ ]] && continue
     [[ -z "$line" ]] && continue
 

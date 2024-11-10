@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Generate genesis.block
+# Generate genesis block
 bin/configtxgen -profile OrdererGenesis -outputBlock ./channel-artifacts/genesis.block -channelID "${SYS_CHANNEL}"
 # Generate channel transaction
 bin/configtxgen -profile ChannelProfile -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID "${CHANNEL_NAME}"
