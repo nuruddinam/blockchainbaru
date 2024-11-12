@@ -14,8 +14,9 @@
   "author": "BRAIN IPB",
   "license": "ISC",
   "dependencies": {
-    "crypto": "^1.0.1",
-    "fabric-contract-api": "^2.5.6",
-    "fabric-shim": "^2.5.6"
+    "ajv": "^8.17.1",
+    "fabric-contract-api": "2.4.2",
+    "fabric-shim": "2.4.2",
+    "nodemon": "^3.1.7"
   }
 }
