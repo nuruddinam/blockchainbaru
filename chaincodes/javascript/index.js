@@ -11,6 +11,16 @@ class KVContract extends Contract {
   }
 
   async put(ctx, key, value) {
+    const parseData = JSON.parse(data);
+    // validate input data
+    const isValid = validateUserData(parseData.data);
+    if (!isValid) {
+      return {
+        status: 400,
+        data: parseData.data,
+        message: "Failed to add transaction. Invalid Input Data",
+      };
+    }
     await ctx.stub.putState(key, Buffer.from(value));
     return { success: "OK" };
   }
