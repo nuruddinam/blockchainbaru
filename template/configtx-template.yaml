@@ -40,7 +40,7 @@ Organizations:
         Type: Signature
         Rule: "OR('OrdererMSP.member')"
 
-  - &org1Name
+  - &lnsw1
     Name: ${ORG1_MSPNAME}
     ID: ${ORG1_MSPNAME}
     MSPDir: crypto-config/peerOrganizations/${ORG1_DOMAIN}/msp
@@ -58,10 +58,10 @@ Organizations:
         Type: Signature
         Rule: "OR('${ORG1_MSPNAME}.peer')"
     AnchorPeers:
-      - Host: ${PEER0_ORG1_DOMAIN} # define dns / ip address if using multihost technique
+      - Host: ${PEER0_ORG1_HOST_IPADDRESS} # define dns / ip address if using multihost technique
         Port: ${PEER0_ORG1_PORT} # define port
 
-  - &org2Name
+  - &lnsw2
     Name: ${ORG2_MSPNAME}
     ID: ${ORG2_MSPNAME}
     MSPDir: crypto-config/peerOrganizations/${ORG2_DOMAIN}/msp
@@ -79,7 +79,7 @@ Organizations:
         Type: Signature
         Rule: "OR('${ORG2_MSPNAME}.peer')"
     AnchorPeers:
-      - Host: ${PEER0_ORG2_DOMAIN}
+      - Host: ${PEER0_ORG2_HOST_IPADDRESS}
         Port: ${PEER0_ORG2_PORT}
 
 Application: &ApplicationDefaults
@@ -101,7 +101,7 @@ Application: &ApplicationDefaults
     <<: *ApplicationCapabilities
 
 Orderer: &OrdererDefaults
-  OrdererType: etcdraft # define consensus type, either solo or etcdraft
+  OrdererType: solo # define consensus type, either solo or etcdraft
   Addresses:
     - orderer.example.com:${ORDERER_MAIN_PORT}
   BatchTimeout: 2s
@@ -131,15 +131,7 @@ Orderer: &OrdererDefaults
         Port: ${ORDERER_MAIN_PORT}
         ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
         ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-      - Host: ${ORDERER1_ORG1_DOMAIN}
-        Port: ${ORDERER1_ORG1_PORT}
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/tls/server.crt
-      - Host: ${ORDERER2_ORG2_DOMAIN}
-        Port: ${ORDERER2_ORG2_PORT}
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG2_DOMAIN}/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/${ORDERER2_ORG2_DOMAIN}/tls/server.crt
-
+     
 Profiles:
   OrdererGenesis:
     <<: *ChannelDefaults
@@ -150,8 +142,8 @@ Profiles:
     Consortiums:
       SampleConsortium: # rename based on Consortium name on ChannelProfile
         Organizations:
-          - *org1Name
-          - *org2Name
+          - *lnsw1
+          - *lnsw2
 
   ChannelProfile:
     <<: *ChannelDefaults
@@ -159,5 +151,5 @@ Profiles:
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *org1Name
-        - *org2Name
+        - *lnsw1
+        - *lnsw2

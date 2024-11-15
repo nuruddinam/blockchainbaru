@@ -23,7 +23,7 @@ services:
     ports:
       - ${ORDERER_MAIN_PORT}:${ORDERER_MAIN_PORT}
 
-  peer0.org1Name.example.com:
+  peer0.lnsw1.example.com:
     container_name: ${PEER0_ORG1_DOMAIN}
     extends:
       file: peer-base.yaml
@@ -34,7 +34,7 @@ services:
       - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER0_ORG1_PORT}
       - CORE_PEER_CHAINCODEADDRESS=${PEER0_ORG1_CHAINCODE_ADDRESS} # define dns
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER0_ORG1_CHAINCODE_PORT}
-      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER1_ORG1_CORE_ADDRESS} ${PEER0_ORG2_CORE_ADDRESS} # define others ip address
+      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG2_CORE_ADDRESS} # define others ip address
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER0_ORG1_CORE_ADDRESS} # define ip address
       - CORE_PEER_LOCALMSPID=${ORG1_MSPNAME} # define msp name
     volumes:
@@ -45,29 +45,7 @@ services:
     ports:
       - ${PEER0_ORG1_PORT}:${PEER0_ORG1_PORT}
 
-  peer1.org1Name.example.com:
-    container_name: ${PEER1_ORG1_DOMAIN}
-    extends:
-      file: peer-base.yaml
-      service: peer-base
-    environment:
-      - CORE_PEER_ID=${PEER1_ORG1_DOMAIN}
-      - CORE_PEER_ADDRESS=${PEER1_ORG1_CORE_ADDRESS} # define ip address
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER1_ORG1_PORT}
-      - CORE_PEER_CHAINCODEADDRESS=${PEER1_ORG1_CHAINCODE_ADDRESS} # define dns
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER1_ORG1_CHAINCODE_PORT}
-      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG1_CORE_ADDRESS} ${PEER0_ORG2_CORE_ADDRESS} # define others ip address
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER1_ORG1_CORE_ADDRESS} # define ip address
-      - CORE_PEER_LOCALMSPID=${ORG1_MSPNAME} # define msp name
-    volumes:
-      - /var/run/:/host/var/run/
-      - ../crypto-config/peerOrganizations/${ORG1_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/msp:/etc/hyperledger/fabric/msp
-      - ../crypto-config/peerOrganizations/${ORG2_DOMAIN}/peers/${PEER1_ORG1_DOMAIN}/tls:/etc/hyperledger/fabric/tls
-      - ${PEER1_ORG1_DOMAIN}:/var/hyperledger/production
-    ports:
-      - ${PEER1_ORG1_PORT}:${PEER1_ORG1_PORT}
-
-  peer0.org2Name.example.com:
+  peer0.lnsw2.example.com:
     container_name: ${PEER0_ORG2_DOMAIN}
     extends:
       file: peer-base.yaml
@@ -78,7 +56,7 @@ services:
       - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER0_ORG2_PORT}
       - CORE_PEER_CHAINCODEADDRESS=${PEER0_ORG2_CHAINCODE_ADDRESS} # define dns
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER0_ORG2_CHAINCODE_PORT}
-      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG1_CORE_ADDRESS} ${PEER1_ORG1_CORE_ADDRESS} # define others ip address
+      - CORE_PEER_GOSSIP_BOOTSTRAP=${PEER0_ORG1_CORE_ADDRESS}
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=${PEER0_ORG2_CORE_ADDRESS} # define ip address
       - CORE_PEER_LOCALMSPID=${ORG2_MSPNAME} # define msp name
     volumes:

@@ -6,14 +6,13 @@
 version: "2"
 
 networks:
-  fabric-network:
+  fabric-network1:
     external: true
 
 volumes:
   orderer.example.com:
-  orderer1.org1Name.example.com:
-  peer0.org1Name.example.com:
-  ca-org1Name:
+  peer0.lnsw1.example.com:
+  ca-lnsw1:
   fabric-api:
   pgdata:
   walletstore:
@@ -27,24 +26,7 @@ services:
     networks:
       - ${NETWORK_NAME}
 
-  orderer1.org1Name.example.com:
-    extends:
-      file: ../../base/peer-base.yaml
-      service: orderer-base
-    environment:
-      - ORDERER_GENERAL_LISTENPORT=${ORDERER1_ORG1_PORT}
-    container_name: ${ORDERER1_ORG1_DOMAIN}
-    volumes:
-      - ../../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/msp:/var/hyperledger/orderer/msp
-      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER1_ORG1_DOMAIN}/tls/:/var/hyperledger/orderer/tls
-      - ${ORDERER1_ORG1_DOMAIN}:/var/hyperledger/production/orderer
-    ports:
-      - ${ORDERER1_ORG1_PORT}:${ORDERER1_ORG1_PORT}
-    networks:
-      - ${NETWORK_NAME}
-
-  peer0.org1Name.example.com:
+  peer0.lnsw1.example.com:
     container_name: ${PEER0_ORG1_DOMAIN}
     extends:
       file: ../../base/docker-compose-base.yaml
@@ -81,12 +63,11 @@ services:
       - ../../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
       - orderer.example.com
-      - ${ORDERER1_ORG1_DOMAIN}
       - ${PEER0_ORG1_DOMAIN}
     networks:
       - ${NETWORK_NAME}
 
-  ca-org1Name:
+  ca-lnsw1:
     image: hyperledger/fabric-ca:latest
     labels:
       service: hyperledger-fabric

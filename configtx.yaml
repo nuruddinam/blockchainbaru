@@ -40,47 +40,47 @@ Organizations:
         Type: Signature
         Rule: "OR('OrdererMSP.member')"
 
-  - &org1Name
-    Name: org1NameMSP
-    ID: org1NameMSP
-    MSPDir: crypto-config/peerOrganizations/org1Name.example.com/msp
+  - &lnsw1
+    Name: lnsw1MSP
+    ID: lnsw1MSP
+    MSPDir: crypto-config/peerOrganizations/lnsw1.example.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('org1NameMSP.member')"
+        Rule: "OR('lnsw1MSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('org1NameMSP.admin', 'org1NameMSP.client')"
+        Rule: "OR('lnsw1MSP.admin', 'lnsw1MSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('org1NameMSP.admin')"
+        Rule: "OR('lnsw1MSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('org1NameMSP.peer')"
+        Rule: "OR('lnsw1MSP.peer')"
     AnchorPeers:
-      - Host: peer0.org1Name.example.com # define dns / ip address if using multihost technique
+      - Host: 10.216.74.143  # define dns / ip address if using multihost technique
         Port: 7051 # define port
 
-  - &org2Name
-    Name: org2NameMSP
-    ID: org2NameMSP
-    MSPDir: crypto-config/peerOrganizations/org2Name.example.com/msp
+  - &lnsw2
+    Name: lnsw2MSP
+    ID: lnsw2MSP
+    MSPDir: crypto-config/peerOrganizations/lnsw2.example.com/msp
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('org2NameMSP.member')"
+        Rule: "OR('lnsw2MSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('org2NameMSP.admin', 'org2NameMSP.client')"
+        Rule: "OR('lnsw2MSP.admin', 'lnsw2MSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('org2NameMSP.admin')"
+        Rule: "OR('lnsw2MSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('org2NameMSP.peer')"
+        Rule: "OR('lnsw2MSP.peer')"
     AnchorPeers:
-      - Host: peer0.org2Name.example.com
-        Port: 9051
+      - Host: 10.216.74.143
+        Port: 8051
 
 Application: &ApplicationDefaults
   Organizations:
@@ -101,7 +101,7 @@ Application: &ApplicationDefaults
     <<: *ApplicationCapabilities
 
 Orderer: &OrdererDefaults
-  OrdererType: etcdraft # define consensus type, either solo or etcdraft
+  OrdererType: solo # define consensus type, either solo or etcdraft
   Addresses:
     - orderer.example.com:7050
   BatchTimeout: 2s
@@ -131,18 +131,6 @@ Orderer: &OrdererDefaults
         Port: 7050
         ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
         ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-      - Host: orderer1.org1Name.example.com
-        Port: 10050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.org1Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.org1Name.example.com/tls/server.crt
-      - Host: orderer2.org1Name.example.com
-        Port: 8050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.org1Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.org1Name.example.com/tls/server.crt
-      - Host: orderer3.org2Name.example.com
-        Port: 9050
-        ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.org2Name.example.com/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.org2Name.example.com/tls/server.crt
 
 Profiles:
   OrdererGenesis:
@@ -154,8 +142,8 @@ Profiles:
     Consortiums:
       SampleConsortium: # rename based on Consortium name on ChannelProfile
         Organizations:
-          - *org1Name
-          - *org2Name
+          - *lnsw1
+          - *lnsw2
 
   ChannelProfile:
     <<: *ChannelDefaults
@@ -163,5 +151,5 @@ Profiles:
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *org1Name
-        - *org2Name
+        - *lnsw1
+        - *lnsw2

@@ -9,14 +9,7 @@ OrdererOrgs:
         SANS:
           - orderer.example.com
           - ${PEER0_ORG1_HOST_IPADDRESS}
-      - Hostname: ${ORDERER1_ORG1_NAME}
-        SANS:
-          - ${ORDERER1_ORG1_DOMAIN}
-          - ${PEER0_ORG1_HOST_IPADDRESS}
-      - Hostname: ${ORDERER2_ORG2_NAME}
-        SANS:
-          - ${ORDERER2_ORG2_DOMAIN}
-          - ${PEER0_ORG2_HOST_IPADDRESS}
+
 
 # Peer Definition
 # Note: Peer name orderer starts from 0. peer0, peer1, etc.

@@ -6,34 +6,15 @@
 version: "2"
 
 networks:
-  fabric-network:
+  fabric-network1:
     external: true
 
 volumes:
-  orderer3.org2Name.example.com:
-  peer0.org2Name.example.com:
+  peer0.lnsw2.example.com:
   pgdata:
   walletstore:
 
-services:
-  orderer3.org2Name.example.com:
-    extends:
-      file: ../../base/peer-base.yaml
-      service: orderer-base
-    environment:
-      - ORDERER_GENERAL_LISTENPORT=${ORDERER3_ORG2_PORT}
-    container_name: ${ORDERER3_ORG2_DOMAIN}
-    volumes:
-      - ../../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER3_ORG2_DOMAIN}/msp:/var/hyperledger/orderer/msp
-      - ../../crypto-config/ordererOrganizations/example.com/orderers/${ORDERER3_ORG2_DOMAIN}/tls/:/var/hyperledger/orderer/tls
-      - ${ORDERER3_ORG2_DOMAIN}:/var/hyperledger/production/orderer
-    ports:
-      - ${ORDERER3_ORG2_PORT}:${ORDERER3_ORG2_PORT}
-    networks:
-      - ${NETWORK_NAME}
-
-  peer0.org2Name.example.com:
+  peer0.lnsw2.example.com:
     container_name: ${PEER0_ORG2_DOMAIN}
     extends:
       file: ../../base/docker-compose-base.yaml
@@ -70,11 +51,10 @@ services:
       - ../../channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
       - ${PEER0_ORG2_DOMAIN}
-      - ${ORDERER3_ORG2_DOMAIN}
     networks:
       - ${NETWORK_NAME}
 
-  ca-org2Name:
+  ca-lnsw2:
     image: hyperledger/fabric-ca:latest
     labels:
       service: hyperledger-fabric
@@ -82,12 +62,12 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-${ORG2_NAME}
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=${HOST3_CAPORT}
-      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:${HOST3_CAPORT_LISTENADDRESS}
+      - FABRIC_CA_SERVER_PORT=${HOST2_CAPORT}
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:${HOST2_CAPORT_LISTENADDRESS}
     ports:
-      - ${HOST3_CAPORT}:${HOST3_CAPORT}
-      - ${HOST3_CAPORT_LISTENADDRESS}:${HOST3_CAPORT_LISTENADDRESS}
-    command: sh -c 'fabric-ca-server start -b ${HOST3_CA_ADMIN_NAME}:${HOST3_CA_ADMIN_PASSWORD} -d'
+      - ${HOST2_CAPORT}:${HOST2_CAPORT}
+      - ${HOST2_CAPORT_LISTENADDRESS}:${HOST2_CAPORT_LISTENADDRESS}
+    command: sh -c 'fabric-ca-server start -b ${HOST2_CA_ADMIN_NAME}:${HOST2_CA_ADMIN_PASSWORD} -d'
     volumes:
       - ../../fabric-ca/${ORG2_NAME}:/etc/hyperledger/fabric-ca-server
     container_name: ca-${ORG2_NAME}

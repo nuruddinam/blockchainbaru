@@ -21,12 +21,12 @@ CAPORT=${HOST1_CAPORT}
 PEERPEM=./crypto-config/peerOrganizations/${ORG1_DOMAIN}/tlsca/tlsca.${ORG1_DOMAIN}-cert.pem
 CAPEM=./crypto-config/peerOrganizations/${ORG1_DOMAIN}/ca/ca.${ORG1_DOMAIN}-cert.pem
 
-echo "$(json_ccp $ORGNAME $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./crypto-config/peerOrganizations/${ORG1_DOMAIN}/connection-${ORG1_NAME}.json
+echo "$(json_ccp $ORGNAME $P0PORT $CAPORT $PEERPEM $CAPEM)" > crypto-config/peerOrganizations/${ORG1_DOMAIN}/connection-${ORG1_NAME}.json
 
 ORGNAME=${ORG2_NAME}
 P0PORT=${PEER0_ORG2_PORT}
-CAPORT=${HOST3_CAPORT}
+CAPORT=${HOST2_CAPORT}
 PEERPEM=./crypto-config/peerOrganizations/${ORG2_DOMAIN}/tlsca/tlsca.${ORG2_DOMAIN}-cert.pem
 CAPEM=./crypto-config/peerOrganizations/${ORG2_DOMAIN}/ca/ca.${ORG2_DOMAIN}-cert.pem
 
-echo "$(json_ccp $ORGNAME $P0PORT $CAPORT $PEERPEM $CAPEM)" > ./crypto-config/peerOrganizations/${ORG2_DOMAIN}/connection-${ORG2_NAME}.json
+echo "$(json_ccp $ORGNAME $P0PORT $CAPORT $PEERPEM $CAPEM)" > crypto-config/peerOrganizations/${ORG2_DOMAIN}/connection-${ORG2_NAME}.json
