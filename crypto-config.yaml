@@ -38,4 +38,4 @@ PeerOrgs:
       - Hostname: peer0
         SANS:
           - peer0.lnsw2.example.com
-          - 10.216.74.143
+          - 10.216.74.146

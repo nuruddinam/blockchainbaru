@@ -79,7 +79,7 @@ Organizations:
         Type: Signature
         Rule: "OR('lnsw2MSP.peer')"
     AnchorPeers:
-      - Host: 10.216.74.143
+      - Host: 10.216.74.146
         Port: 8051
 
 Application: &ApplicationDefaults
